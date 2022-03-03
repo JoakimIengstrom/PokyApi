@@ -27,16 +27,84 @@ Program:
 
 Rapport:
 - ta upp ett exempel där du använder `fetch` och gå igenom tidsförloppet. Vad händer från att du kallar på metoden till att du får ut ett JS objekt som svar?
+
 - reflektera över, och analysera de lösningar du gjort i projektet
 
-## Deadlines
+### Reflektioner
+___
+Vi samlade alla eventListeners för att det skall synas direkt när du kollar koden, gör det överskådligt. Sedan börjar det med att ladda senaste sidan från LocalStorage.
 
-- Deadline #1 
-  - Rapport lämnas in senast Söndag 06/03-22 kl 23.55 i PingPong.
-  - Grupprojekt lämnas in senast Fredag 04/03-22 kl 23.55 i PingPong.
-- Deadline #2
-  - Rapport lämnas in senast Söndag 20/03-22 kl 23.55 i PingPong.
-  - Grupprojekt lämnas in senast Fredag 18/03-22 kl 23.55 i PingPong.
 
-### Inlämning
+```javascript
+
+    let currentPage = shop.loadPageNr();
+
+document.getElementById("prevPage").addEventListener("click", prevPage);
+document.getElementById("nextPage").addEventListener("click", nextPage);
+document.getElementById("choosePage").addEventListener("keyup", jumpToPage);
+
+```
+
+Till en början så gjordes en ganska enkel pagination där vi med hjälp av hämtar en ny URL med en offset på 12 pokemons åt gången. Vi skickar in ett sidnummer. Märkte dock snart att det gick att skriva in fel saker, men att lägga till curretPage <= 1 samt >= 94 så löste detta på ett bra sätt.
+
+
+```javascript
+
+function prevPage() {
+  if (currentPage <= 1) {
+    currentPage = 94;
+    updatePokemonsOnPage(shop.lastpageUrl);
+  } else {
+    currentPage--;
+    updatePokemonsOnPage(shop.previousPageUrl);
+  }
+  updatePageNummer();
+}
+
+function nextPage() {
+  if (currentPage >= 94) {
+    currentPage = 1;
+    updatePokemonsOnPage(shop.pageOneUrl);
+  } else {
+    currentPage++;
+    updatePokemonsOnPage(shop.nextPageUrl);
+  }
+  updatePageNummer();
+}
+```
+
+I jumpToPage så har jag valt att använda en input som triggar på när du tycker enter. Denna är är skapad för att du inte skall behöva bläddra genom all sidor. För att få denna att funka så skapade vi getJumpToPageURL i Logic. Detta är för att då hoppa. Sedan använder vi LocalStorage för att spara ner sidnumret i updatePageNummer. Så nu kan du också lämna sidan och fortästta där du var, funkar både om du klickar runt oh om du hoppar. 
+
+```javascript
+
+function jumpToPage(event) {
+  if (event.keyCode === 13) {
+    currentPage = parseInt(document.getElementById("choosePage").value);
+    if (currentPage >= 1 && currentPage <= 94) {
+      updatePokemonsOnPage(shop.getJupmpToPageUrl(currentPage));
+      updatePageNummer();
+      document.getElementById("choosePage").value = "";
+    } else {
+      document.getElementById("choosePage").value = "";
+    }
+  }
+}
+
+/* Denna är i Logic */
+
+ getJupmpToPageUrl(askedPageNr) {
+    let offset = (askedPageNr - 1) * 12;
+
+    this.jumpToPageUrl = new URL("https://pokeapi.co");
+    this.jumpToPageUrl.pathname = "/api/v2/pokemon";
+    this.jumpToPageUrl.searchParams.set("limit", "12");
+    this.jumpToPageUrl.searchParams.set("offset", offset);
+
+    return this.jumpToPageUrl;
+  }
+
+```
+
+
+
 
