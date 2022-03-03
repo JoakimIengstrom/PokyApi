@@ -1,3 +1,6 @@
+/**
+ * @class
+ */
 export class logic {
   flavorTexts = [];
   pokemons = [];
@@ -7,7 +10,10 @@ export class logic {
   pageOneUrl = "";
   previousPageUrl = "";
   nextPageUrl = "";
-
+  /**
+   * @constructor
+   * sets correct url for fetching pokemons via PokeApi pageination.
+   */
   constructor() {
     let offset = (this.loadPageNr() - 1) * 12;
 
@@ -28,9 +34,9 @@ export class logic {
   }
 
   /**
-   * @description Async function fetching pokemons
-   * @param {*} url of the page the pokemons should be fetched from
-   * @returns returnerar
+   * @description sets url for fetching pokemons on asked page via PokeApi pageination.
+   * @param asked page number
+   * @returns url via PokeApi pageination for the pokemons on asked page.
    */
 
   getJupmpToPageUrl(askedPageNr) {
@@ -85,7 +91,6 @@ export class logic {
    * @description Async function fetching pokemons to browserCacheMemory. Encrease userExperience and pagespeed.
    * @param {*} url of the page
    */
-
   async preLoadCacheMemory(url) {
     let pageData = await fetch(url).then((response) => {
       if (response.ok) {
@@ -105,6 +110,11 @@ export class logic {
     }
   }
 
+  /**
+   * @description Async function fetching a pokemon objekt
+   * @param {*} url of the page the pokemon info can be fetched from
+   * @returns a single pokemon objekt
+   */
   async fetchPokemon(url) {
     const pokemon = await fetch(url).then((response) => response.json());
     const species = await fetch(pokemon.species.url).then((response) =>
@@ -138,10 +148,17 @@ export class logic {
     return pokemonObj;
   }
 
+  /**
+   * @description saves a pagenumber to local storage key: "savedPageNr"
+   * @param the page number to be saved
+   */
   savePageNr(pageNr) {
     localStorage.setItem("savedPageNr", JSON.stringify(pageNr));
   }
-
+  /**
+   * @description sets variable currentPage to local storage key: "savedPageNr"
+   * @return currentPage
+   */
   loadPageNr() {
     let savedPage = +localStorage.getItem("savedPageNr");
     if (savedPage >= 1) {
