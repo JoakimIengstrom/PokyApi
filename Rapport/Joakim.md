@@ -1,31 +1,23 @@
-# Grupprojekt - frontend app
+# `Grupprojekt - frontend app`
 
-### Fetch
+### `Index`
+
+---
+- [`Grupprojekt - frontend app`](#grupprojekt---frontend-app)
+    - [`Index`](#index)
+    - [`Fetch`](#fetch)
+    - [Reflektioner](#reflektioner)
+    - [Personlig reflektioner](#personlig-reflektioner)
+
+---
+
+### `Fetch`
 ___
 
-getJumpToPageURL: 
+Det går att göra en fetch på många sätt, det jag lärde mig tidigt är att javascript jobbar på ett sätt som jag inte riktigt är van vid. Dvs att saker och ting inte synkar riktigt i tiden. I slutet så önskade jag att bygga sidan så att den ur UI perspektiv skall kunna uppdatera antalet i count och med alla sökbara Pokemons som finns. Genom att göra det så blir det ju också mindre underhåll på sidan. 
 
-input => askedPageNr: 10
-offset = undefined
-
-=>
-
-offset is set to 108 due to the fomula (askedPageNr -1 ) * 12. 
-This is then returned back to be used in the URL to decide what page will displayed. 
-
-input takes in an int and when key event happens it is sent to logic, were askedPageNr gets the value. Say 10. Here it gets into our formula that deducts one and multiply with 12, this creats an offset of 108. 
-
-This is returned and put into uppdatePageNumber 
-
-
-
-___
-
-I slutet så önskade jag att byga sidan så att den ur UI perspektiv skall kunna uppdatera mängden sidor och sökbara Pokymons som finns. Att den skall också vara mindre jobb för underhåll. 
-
-Men började lite försent med detta och det blir "undifiend" och felet är för att den hinner inte fått ett värde, jag hade innan previous page körs klart. Men det skall kunna göras en init funktion på en statisk construktor där jag kan fejka det. Men så långt hann jag inte komma. Hoppas på kunna lösa detta någon gång på fritiden! 
-
-Men tanken kommer under constructorn.
+Började lite försent med detta och det blir "undifiend", då det inte finns något värde när du kör previous. 
+Problemet som sker är ju att konstruktorn körs och allt går så fort, att när jag sedan trycker på previous så hinner den inte fylla i värdet. Jag har nu hårdkodat det i själva programmet igen, för att det skall finnas ett värde, och det fungerar nu, men hoppas på att kunna jobba vidare på denna. 
 
 ```javascript
 
@@ -52,7 +44,7 @@ Men tanken kommer under constructorn.
 ```
 
 För att kunna göra detta så gör jag följade fetch. Jag använder Apins egna count finns. Jag hämtar `"https://pokeapi.co/api/v2/pokemon"` och på den så gör vi object.count. 
-Denna hämtar då hur många som finns just nu i APIn. Utifrån det värdet så delar jag med 12 då vi jobbar med sidor som visar tolv Pokemons. Det jag dock gör är att använda Math.ceil för att få närmaste heltal avrundat upp. För att våran pagination sedan skall funka så behöver vi dock ta det värdet -1 för att sedan gångra med 12 för att få vårt offset att stämma. 
+Denna hämtar då hur många som finns just nu i APIn. Utifrån det värdet så delar jag med 12 då vi jobbar med sidor som visar tolv Pokemons. Det jag dock gör är att använda Math.ceil för att få närmaste heltal avrundat upp. För att våran pagination sedan skall funka så behöver vi dock ta det värdet -1 för att sedan gångra med 12 för att få vårt offset att stämma. Så ovan så funkar det fint hit, men i praktiken så har inte denna fetchen och värdet sparats i tid på ett sätt så vi kan använda det. 
 
 
 ```javascript
@@ -70,7 +62,7 @@ async fetchLastPageOffset() {
   }
 
 ```
-
+[Index](#index)
 ### Reflektioner
 ___
 Vi samlade alla eventListeners för att det skall synas direkt när du kollar koden, gör det överskådligt. Sedan börjar det med att ladda senaste sidan från LocalStorage.
@@ -152,6 +144,8 @@ ___
 Skriv klart rapporten innan du fortsätter bygga massa extra funktionen så att jag nu sitter här sita dagen ändå och försöker få klart det. 
 <br><br>
 Det har varit superkul att jobba med Anna Märta, det känns som vi båda är duktiga på att sväva iväg ibland och behöver påminna varandra att ta en sak åt gången, jag behöver bli bättre på att låga andra sätta mig in i mina problem när jag ber om hjälp och inte springa i 120. Anna Märta påminner jag om att hon är grym, och att inte allt funkar direkt är helt okej! Vi kompleterar varandra bra, jag har jobbat lite mer frontend och Märta backend, så det är kul! 
+
+[Index](#index)
 
 
 
