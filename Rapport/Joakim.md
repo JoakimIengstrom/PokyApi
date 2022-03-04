@@ -1,34 +1,75 @@
-
 # Grupprojekt - frontend app
 
-Ni ska jobba i par och det vanliga gäller när det kommer till jämt committande. Ni kan dela upp arbetet eller parkoda hur ni vill. **Båda måsta ha egna commits där ni gör web-api anrop.**
+### Fetch
+___
 
-Användaren ska kunna trigga fler web-api anrop än de som sker i början för att bygga upp hemsidan första gången. Sidan ska inte behöva laddas om och man ska heller inte behöva navigera till en ny sida. Det viktiga är att ni använder fetch + DOM manipulering för att hålla sidan uppdaterad.
+getJumpToPageURL: 
 
-Ni måste båda koda var sitt sådant här moment för att fylla **kursmål 6**.
+input => askedPageNr: 10
+offset = undefined
 
-Den ena kan göra en [Collapse](https://getbootstrap.com/docs/5.1/components/collapse/) eller [Modal](https://getbootstrap.com/docs/5.0/components/modal/) som visar mer info om ett item när man klickar på `read more`/`read comments`.
+=>
 
-Den andra kan göra en [Pagination](https://getbootstrap.com/docs/5.1/components/pagination/) eller [Navigation](https://getbootstrap.com/docs/5.0/components/navs-tabs/#vertical) där man bara ser en viss mängd items åt gången och användaren kan bläddra fram och tillbaka.
+offset is set to 108 due to the fomula (askedPageNr -1 ) * 12. 
+This is then returned back to be used in the URL to decide what page will displayed. 
 
-Det är ok att komma på något annat att göra med, men det måste innefatta användarevent som leder till web-api anrop.
+input takes in an int and when key event happens it is sent to logic, were askedPageNr gets the value. Say 10. Here it gets into our formula that deducts one and multiply with 12, this creats an offset of 108. 
 
-### Pokemon webbshop
+This is returned and put into uppdatePageNumber 
 
-Denna hemsida bygger på [PokéAPI](https://pokeapi.co/), all info om pokemon hämtas härifrån. Tanken är att skapa en webbshop där man kan browsa pokemon via en pagination. Nedan är ett par wireframe exempel:
 
-## Allmänt
 
-### G krav
+___
 
-Program:
-- web-api:n används för att fylla ut hemsidan. Ingen hårdkodad data
-- events används för trigga ytterligare web-api anrop vid behov
+I slutet så önskade jag att byga sidan så att den ur UI perspektiv skall kunna uppdatera mängden sidor och sökbara Pokymons som finns. Att den skall också vara mindre jobb för underhåll. 
 
-Rapport:
-- ta upp ett exempel där du använder `fetch` och gå igenom tidsförloppet. Vad händer från att du kallar på metoden till att du får ut ett JS objekt som svar?
+Men började lite försent med detta och det blir "undifiend" och felet är för att den hinner inte fått ett värde, jag hade innan previous page körs klart. Men det skall kunna göras en init funktion på en statisk construktor där jag kan fejka det. Men så långt hann jag inte komma. Hoppas på kunna lösa detta någon gång på fritiden! 
 
-- reflektera över, och analysera de lösningar du gjort i projektet
+Men tanken kommer under constructorn.
+
+```javascript
+
+  constructor() {
+    let offset = (this.loadPageNr() - 1) * 12;
+    let offsetLastPage = this.fetchLastPageOffset();
+
+    this.firstPageUrl = new URL("https://pokeapi.co");
+    this.firstPageUrl.pathname = "/api/v2/pokemon";
+    this.firstPageUrl.searchParams.set("limit", "12");
+    this.firstPageUrl.searchParams.set("offset", offset);
+
+    this.lastpageUrl = new URL("https://pokeapi.co");
+    this.lastpageUrl.pathname = "/api/v2/pokemon";
+    this.lastpageUrl.searchParams.set("limit", "12");
+    this.lastpageUrl.searchParams.set("offset", offsetLastPage);
+
+    this.pageOneUrl = new URL("https://pokeapi.co");
+    this.pageOneUrl.pathname = "/api/v2/pokemon";
+    this.pageOneUrl.searchParams.set("limit", "12");
+    this.pageOneUrl.searchParams.set("offset", "0");
+  }
+
+```
+
+För att kunna göra detta så gör jag följade fetch. Jag använder Apins egna count finns. Jag hämtar `"https://pokeapi.co/api/v2/pokemon"` och på den så gör vi object.count. 
+Denna hämtar då hur många som finns just nu i APIn. Utifrån det värdet så delar jag med 12 då vi jobbar med sidor som visar tolv Pokemons. Det jag dock gör är att använda Math.ceil för att få närmaste heltal avrundat upp. För att våran pagination sedan skall funka så behöver vi dock ta det värdet -1 för att sedan gångra med 12 för att få vårt offset att stämma. 
+
+
+```javascript
+
+async fetchLastPageOffset() {
+    let pokemonCount;
+
+    const response = await fetch("https://pokeapi.co/api/v2/pokemon");
+    const object = await response.json();
+
+    pokemonCount = object.count;
+    let maxNumberOfPages = Math.ceil(pokemonCount / 12);
+    let lastPageOffset = (maxNumberOfPages - 1) * 12;
+    return lastPageOffset;
+  }
+
+```
 
 ### Reflektioner
 ___
@@ -104,6 +145,15 @@ function jumpToPage(event) {
   }
 
 ```
+
+### Personlig reflektioner
+___
+
+Skriv klart rapporten innan du fortsätter bygga massa extra funktionen så att jag nu sitter här sita dagen ändå och försöker få klart det. 
+<br><br>
+Det har varit superkul att jobba med Anna Märta, det känns som vi båda är duktiga på att sväva iväg ibland och behöver påminna varandra att ta en sak åt gången, jag behöver bli bättre på att låga andra sätta mig in i mina problem när jag ber om hjälp och inte springa i 120. Anna Märta påminner jag om att hon är grym, och att inte allt funkar direkt är helt okej! Vi kompleterar varandra bra, jag har jobbat lite mer frontend och Märta backend, så det är kul! 
+
+
 
 
 

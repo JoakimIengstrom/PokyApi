@@ -35,7 +35,7 @@ function jumpToPage(event) {
   if (event.keyCode === 13) {
     currentPage = parseInt(document.getElementById("choosePage").value);
     if (currentPage >= 1 && currentPage <= 94) {
-      updatePokemonsOnPage(shop.getJupmpToPageUrl(currentPage));
+      updatePokemonsOnPage(shop.getJumpToPageUrl(currentPage));
       updatePageNummer();
       document.getElementById("choosePage").value = "";
     } else {

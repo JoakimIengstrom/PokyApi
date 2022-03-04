@@ -10,12 +10,15 @@ export class logic {
   pageOneUrl = "";
   previousPageUrl = "";
   nextPageUrl = "";
+
   /**
    * @constructor
    * sets correct url for fetching pokemons via PokeApi pageination.
    */
+
   constructor() {
     let offset = (this.loadPageNr() - 1) * 12;
+    let lastPageOffset = (94 - 1) * 12;
 
     this.firstPageUrl = new URL("https://pokeapi.co");
     this.firstPageUrl.pathname = "/api/v2/pokemon";
@@ -25,7 +28,7 @@ export class logic {
     this.lastpageUrl = new URL("https://pokeapi.co");
     this.lastpageUrl.pathname = "/api/v2/pokemon";
     this.lastpageUrl.searchParams.set("limit", "12");
-    this.lastpageUrl.searchParams.set("offset", "1114");
+    this.lastpageUrl.searchParams.set("offset", lastPageOffset);
 
     this.pageOneUrl = new URL("https://pokeapi.co");
     this.pageOneUrl.pathname = "/api/v2/pokemon";
@@ -39,7 +42,7 @@ export class logic {
    * @returns url via PokeApi pageination for the pokemons on asked page.
    */
 
-  getJupmpToPageUrl(askedPageNr) {
+  getJumpToPageUrl(askedPageNr) {
     let offset = (askedPageNr - 1) * 12;
 
     this.jumpToPageUrl = new URL("https://pokeapi.co");
@@ -91,6 +94,7 @@ export class logic {
    * @description Async function fetching pokemons to browserCacheMemory. Encrease userExperience and pagespeed.
    * @param {*} url of the page
    */
+
   async preLoadCacheMemory(url) {
     let pageData = await fetch(url).then((response) => {
       if (response.ok) {
@@ -115,6 +119,7 @@ export class logic {
    * @param {*} url of the page the pokemon info can be fetched from
    * @returns a single pokemon objekt
    */
+
   async fetchPokemon(url) {
     const pokemon = await fetch(url).then((response) => response.json());
     const species = await fetch(pokemon.species.url).then((response) =>
@@ -152,13 +157,16 @@ export class logic {
    * @description saves a pagenumber to local storage key: "savedPageNr"
    * @param the page number to be saved
    */
+
   savePageNr(pageNr) {
     localStorage.setItem("savedPageNr", JSON.stringify(pageNr));
   }
+
   /**
    * @description sets variable currentPage to local storage key: "savedPageNr"
    * @return currentPage
    */
+
   loadPageNr() {
     let savedPage = +localStorage.getItem("savedPageNr");
     if (savedPage >= 1) {
